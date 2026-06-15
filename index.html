@@ -69,8 +69,10 @@
     <!-- Invisible Iframe for Form Submission -->
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
-    <!-- Hidden YouTube Player Container (Saves screen estate, fully invisible) -->
-    <div id="ytPlayer" class="absolute pointer-events-none opacity-0 w-0 h-0 top-0 left-0"></div>
+    <!-- Audio element for elegant direct audio (Beautiful Dream Piano & Strings - Ad Free) -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3" type="audio/mpeg">
+    </audio>
 
     <!-- Background Audio Loop Controller -->
     <div class="fixed bottom-6 right-6 z-50 flex items-center gap-2">
@@ -203,12 +205,12 @@
             <div class="bg-white rounded-3xl p-6 md:p-10 shadow-soft-glow border border-primary/5 relative overflow-hidden group hover:shadow-xl transition-all flex flex-col items-center text-center">
                 <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -z-0"></div>
                 <div class="relative z-10 w-full flex flex-col items-center">
-                    <!-- Groom Image with elegant frame -->
-                    <div class="w-48 h-64 md:w-56 md:h-72 rounded-2xl overflow-hidden shadow-md border-4 border-white mb-6 group-hover:scale-[1.02] transition-transform duration-500 shrink-0">
-                        <img src="https://i.postimg.cc/MHc94b3T/IMG-4879.jpg" alt="The Groom" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x500/f3eae1/8da399?text=Groom'">
+                    <!-- Groom Image with elegant natural frame (Preserves 100% of the original photo, no cropping) -->
+                    <div class="w-full max-w-[260px] sm:max-w-[290px] md:max-w-[310px] rounded-2xl overflow-hidden shadow-md border-4 border-white mb-6 group-hover:scale-[1.02] transition-transform duration-500 shrink-0 bg-cream">
+                        <img src="https://i.postimg.cc/MHc94b3T/IMG-4879.jpg" alt="The Groom" class="w-full h-auto block" style="image-rendering: -webkit-optimize-contrast;" onerror="this.src='https://placehold.co/400x500/f3eae1/8da399?text=Groom'">
                     </div>
                     <span class="font-serif text-xs uppercase tracking-widest text-secondary">The Groom</span>
-                    <h3 class="font-serif text-2xl font-bold text-dark mt-2 mb-4">馮晨育 <span class="font-light italic text-dark/70 text-lg ml-2">Chenyu</span></h3>
+                    <h3 class="font-serif text-2xl text-dark mt-2 mb-4">馮晨育 <span class="font-light italic text-dark/70 text-lg ml-1">Chenyu</span></h3>
                     <p class="font-serif leading-loose text-dark/70 text-sm md:text-base">
                         晨光微曦中，你的笑容像溫暖的朝陽，<br>
                         照亮了我生命中的每一個角落。<br>
@@ -222,12 +224,12 @@
             <div class="bg-white rounded-3xl p-6 md:p-10 shadow-soft-glow border border-primary/5 relative overflow-hidden group hover:shadow-xl transition-all flex flex-col items-center text-center">
                 <div class="absolute top-0 left-0 w-24 h-24 bg-secondary/5 rounded-br-full -z-0"></div>
                 <div class="relative z-10 w-full flex flex-col items-center">
-                    <!-- Bride Image with elegant frame -->
-                    <div class="w-48 h-64 md:w-56 md:h-72 rounded-2xl overflow-hidden shadow-md border-4 border-white mb-6 group-hover:scale-[1.02] transition-transform duration-500 shrink-0">
-                        <img src="https://i.postimg.cc/j29FdknP/IMG-4863.jpg" alt="The Bride" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x500/f3eae1/8da399?text=Bride'">
+                    <!-- Bride Image with elegant natural frame (Preserves 100% of the original photo, no cropping) -->
+                    <div class="w-full max-w-[260px] sm:max-w-[290px] md:max-w-[310px] rounded-2xl overflow-hidden shadow-md border-4 border-white mb-6 group-hover:scale-[1.02] transition-transform duration-500 shrink-0 bg-cream">
+                        <img src="https://i.postimg.cc/j29FdknP/IMG-4863.jpg" alt="The Bride" class="w-full h-auto block" style="image-rendering: -webkit-optimize-contrast;" onerror="this.src='https://placehold.co/400x500/f3eae1/8da399?text=Bride'">
                     </div>
                     <span class="font-serif text-xs uppercase tracking-widest text-secondary">The Bride</span>
-                    <h3 class="font-serif text-2xl font-bold text-dark mt-2 mb-4">劉又寧 <span class="font-light italic text-dark/70 text-lg ml-2">Yuning</span></h3>
+                    <h3 class="font-serif text-2xl text-dark mt-2 mb-4">劉又寧 <span class="font-light italic text-dark/70 text-lg ml-1">Yuning</span></h3>
                     <p class="font-serif leading-loose text-dark/70 text-sm md:text-base">
                         靜謐安寧裡，你的守護如清澈的泉水，<br>
                         給了我最堅實的依靠與安寧。<br>
@@ -610,101 +612,62 @@
         </p>
     </footer>
 
-    <!-- YouTube IFrame Player API Script Loader -->
     <script>
-        // Load YouTube Iframe Player API Dynamically
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        // HTML5 Direct Audio Background Playback & Activation Controller
+        const myAudio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicToggle');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        
+        let isPlaying = false;
 
-        // Global player variable
-        var ytPlayerInstance;
-        var playerReady = false;
-        var musicStatePlaying = false;
+        // Soft music volume initialization
+        myAudio.volume = 0.5;
 
-        // Automatically called when YouTube API is ready
-        function onYouTubeIframeAPIReady() {
-            ytPlayerInstance = new YT.Player('ytPlayer', {
-                height: '0',
-                width: '0',
-                videoId: 'cNGjD0VG4R8', // Ed Sheeran - Perfect
-                playerVars: {
-                    'autoplay': 0,
-                    'loop': 1,
-                    'playlist': 'cNGjD0VG4R8', // Required for single video loop
-                    'controls': 0,
-                    'showinfo': 0,
-                    'rel': 0,
-                    'modestbranding': 1,
-                    'playsinline': 1, // Crucial for playing background audio on iOS
-                    'origin': window.location.origin
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            playerReady = true;
-            // Unmute just in case
-            ytPlayerInstance.unMute();
-            ytPlayerInstance.setVolume(75); // Comfortable ambient music level
-        }
-
-        function onPlayerStateChange(event) {
-            const playIcon = document.getElementById('playIcon');
-            const pauseIcon = document.getElementById('pauseIcon');
-            const btn = document.getElementById('musicToggle');
-
-            if (event.data === YT.PlayerState.PLAYING) {
-                musicStatePlaying = true;
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
-                // Give button a gentle breathing pulse when music is active
-                btn.classList.add('animate-pulse', 'border-primary/60');
-            } else {
-                musicStatePlaying = false;
+        // Toggle Audio state on user manual button press
+        function togglePlayState() {
+            if (isPlaying) {
+                myAudio.pause();
+                isPlaying = false;
                 playIcon.classList.remove('hidden');
                 pauseIcon.classList.add('hidden');
-                btn.classList.remove('animate-pulse', 'border-primary/60');
+                musicBtn.classList.remove('animate-spin', 'scale-105', 'border-primary');
+                musicBtn.style.animation = 'none'; // Stop rotation animation gracefully
+            } else {
+                myAudio.play().then(() => {
+                    isPlaying = true;
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                    // Give button an elegant rotation & slow pulsing glow effect when music is active
+                    musicBtn.style.animation = 'spin 12s linear infinite, pulse 2s infinite';
+                }).catch(e => console.log("Audio autoplay blocked, waiting for touch/scroll to start."));
             }
         }
 
-        // Playback activation handler
-        function startMusicPlayback() {
-            if (playerReady && !musicStatePlaying) {
-                ytPlayerInstance.playVideo();
-            }
-        }
+        musicBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            togglePlayState();
+        });
 
-        // Gentle trigger: Try to play on first scroll or click on screen
-        const startPlayOnInteraction = () => {
-            if (!musicStatePlaying) {
-                startMusicPlayback();
-                // Clean up immediately once interaction starts the play request
-                window.removeEventListener('scroll', startPlayOnInteraction);
-                window.removeEventListener('click', startPlayOnInteraction);
-                window.removeEventListener('touchstart', startPlayOnInteraction);
+        // Safe Trigger Event: Play audio on first user touch/scroll gesture (Bypass Browser Blockers)
+        const triggerFirstAudioPlayback = () => {
+            if (!isPlaying) {
+                myAudio.play().then(() => {
+                    isPlaying = true;
+                    playIcon.classList.add('hidden');
+                    pauseIcon.classList.remove('hidden');
+                    musicBtn.style.animation = 'spin 12s linear infinite, pulse 2s infinite';
+                }).catch(() => {});
+                // Destruct events immediately
+                window.removeEventListener('scroll', triggerFirstAudioPlayback);
+                window.removeEventListener('click', triggerFirstAudioPlayback);
+                window.removeEventListener('touchstart', triggerFirstAudioPlayback);
             }
         };
-        window.addEventListener('scroll', startPlayOnInteraction, { passive: true });
-        window.addEventListener('click', startPlayOnInteraction);
-        window.addEventListener('touchstart', startPlayOnInteraction, { passive: true });
 
-        // Custom controller button event handler
-        document.getElementById('musicToggle').addEventListener('click', function(e) {
-            e.stopPropagation(); // Stop trigger recursion
-            if (!playerReady) return;
-
-            if (musicStatePlaying) {
-                ytPlayerInstance.pauseVideo();
-            } else {
-                ytPlayerInstance.playVideo();
-            }
-        });
+        window.addEventListener('scroll', triggerFirstAudioPlayback, { passive: true });
+        window.addEventListener('click', triggerFirstAudioPlayback);
+        window.addEventListener('touchstart', triggerFirstAudioPlayback, { passive: true });
     </script>
 
     <!-- UI State & Logic Scripts -->
